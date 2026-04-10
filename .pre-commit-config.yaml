@@ -1,14 +1,14 @@
 # ============================================================
-# SecurOps Company-Wide Security Hooks
+# SecurOps Hybrid — Company-Wide Security Hooks
 # File: .pre-commit-config.yaml
-# Location: Root of securops-config repo AND every project repo
+# Source: Approach B (8 hooks) + Approach A (semgrep-mobile)
 # DO NOT modify without Security Team approval
 # ============================================================
 
 repos:
   # ─────────────────────────────────────────────────────────
-  # 1. SECRET SCANNING - Gitleaks
-  #    Blocks: AWS keys, GitHub tokens, Stripe keys, 100+ patterns
+  # 1. SECRET SCANNING - Gitleaks (Fast, 130+ patterns)
+  #    Blocks: AWS keys, GitHub tokens, Stripe keys, etc.
   # ─────────────────────────────────────────────────────────
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.18.2
@@ -19,26 +19,28 @@ repos:
         entry: gitleaks protect --verbose --redact --staged --config .gitleaks.toml
         language: golang
         pass_filenames: false
-        stages: [commit]
+        stages: [pre-commit]
 
   # ─────────────────────────────────────────────────────────
-  # 2. SAST SCANNING - Semgrep
+  # 2. SAST SCANNING - Semgrep (Generic + Mobile rules)
   #    Blocks: OWASP Top 10, SQL Injection, XSS, etc.
+  #    Includes: Android, iOS, Flutter mobile-specific rules
   # ─────────────────────────────────────────────────────────
   - repo: https://github.com/returntocorp/semgrep
     rev: v1.52.0
     hooks:
       - id: semgrep
         name: "🔍 Code Security Scanner (Semgrep)"
-        description: "Scans for OWASP Top 10 vulnerabilities"
+        description: "Scans for OWASP Top 10 + mobile vulnerabilities"
         args:
           - --config=auto
           - --config=p/owasp-top-ten
           - --config=p/security-audit
+          - --config=semgrep-mobile.yml
           - --severity=ERROR
           - --quiet
         pass_filenames: false
-        stages: [commit]
+        stages: [pre-commit]
 
   # ─────────────────────────────────────────────────────────
   # 3. DEPENDENCY SCANNING - Trivy (runs on push, not commit)
@@ -52,7 +54,7 @@ repos:
         entry: bash scripts/trivy-scan.sh
         language: system
         pass_filenames: false
-        stages: [push]
+        stages: [pre-push]
 
   # ─────────────────────────────────────────────────────────
   # 4. BASIC SAFETY CHECKS

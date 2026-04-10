@@ -1,10 +1,11 @@
 # ============================================================
-# SecurOps - Comprehensive Gitleaks Configuration
+# SecurOps Hybrid - Comprehensive Gitleaks Configuration
 # File: .gitleaks.toml
-# Covers 100+ secret patterns across 14 categories
+# Covers 130+ secret patterns across 15 categories
+# From: Approach B
 # ============================================================
 
-title = "SecurOps Company Security Patterns"
+title = "SecurOps Hybrid Company Security Patterns"
 
 # ════════════════════════════════════════════════════════════
 # 1. CLOUD PROVIDERS (17 patterns)
