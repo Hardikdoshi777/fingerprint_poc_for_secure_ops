@@ -36,6 +36,7 @@ repos:
           - --config=auto
           - --config=p/owasp-top-ten
           - --config=p/security-audit
+          - --config=p/cwe-top-25
           - --severity=ERROR
           - -j
           - "1"
